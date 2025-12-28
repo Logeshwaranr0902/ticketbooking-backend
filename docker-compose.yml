@@ -1,13 +1,36 @@
 version: '3.8'
+
 services:
   movie-db:
+    container_name: movie-db-container
     image: 'mysql:8.0'
     environment:
-      - 'MYSQL_DATABASE=movie_db'
-      - 'MYSQL_ROOT_PASSWORD=root'
+      MYSQL_DATABASE: movie_db
+      MYSQL_ROOT_PASSWORD: root
     ports:
-      - '3307:3306'
-    labels:
-      org.springframework.boot.service-connection: mysql
+      - '3307:3306' # For Workbench access
+    networks:
+      - ticket-booking-net
+    volumes:
+      - movie-data:/var/lib/mysql
 
+  theater-db:
+    container_name: theater-db-container
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_DATABASE: theater_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3308:3306' # For Workbench access
+    networks:
+      - ticket-booking-net
+    volumes:
+      - theater-data:/var/lib/mysql
 
+networks:
+  ticket-booking-net:
+    driver: bridge
+
+volumes:
+  movie-data:
+  theater-data:
