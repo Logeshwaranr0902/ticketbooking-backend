@@ -8,7 +8,8 @@
         <groupId>com.ticketbooking</groupId>
         <artifactId>ticketbooking-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../pom.xml</relativePath> </parent>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <artifactId>movie-service</artifactId>
 
