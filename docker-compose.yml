@@ -3,6 +3,7 @@ version: '3.8'
 services:
   movie-db:
     container_name: movie-db-container
+    command: --default-authentication-plugin=mysql_native_password
     image: 'mysql:8.0'
     environment:
       MYSQL_DATABASE: movie_db
@@ -16,6 +17,7 @@ services:
 
   theater-db:
     container_name: theater-db-container
+    command: --default-authentication-plugin=mysql_native_password
     image: 'mysql:8.0'
     environment:
       MYSQL_DATABASE: theater_db
@@ -27,6 +29,34 @@ services:
     volumes:
       - theater-data:/var/lib/mysql
 
+  show-db:
+    container_name: show-db-container
+    command: --default-authentication-plugin=mysql_native_password
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_DATABASE: show_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3309:3306'
+    networks:
+      - ticket-booking-net
+    volumes:
+      - show-data:/var/lib/mysql
+
+  booking-db:
+    container_name: booking-db-container
+    image: 'mysql:8.0'
+    environment:
+      MYSQL_DATABASE: booking_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - '3310:3306'
+    networks:
+      - ticket-booking-net
+    volumes:
+      - booking-data:/var/lib/mysql
+
+
 networks:
   ticket-booking-net:
     driver: bridge
@@ -34,3 +64,5 @@ networks:
 volumes:
   movie-data:
   theater-data:
+  show-data:
+  booking-data:
