@@ -1,29 +1,23 @@
 package com.ticketbooking.booking.service;
 
 import com.ticketbooking.booking.dto.BookingRequest;
+import com.ticketbooking.booking.dto.BookingResponse;
 import com.ticketbooking.booking.entity.Booking;
+import com.ticketbooking.booking.mapper.BookingMapper;
 import com.ticketbooking.booking.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 
 @Service
 @RequiredArgsConstructor
 public class BookingService {
 
     private final BookingRepository bookingRepository;
+    private final BookingMapper bookingMapper;
 
-    public Booking createBooking(BookingRequest request) {
-        // Logic: Just save the booking record for now
-        Booking booking = Booking.builder()
-                .userId(request.getUserId())
-                .showId(request.getShowId())
-                .showSeatIds(request.getSeatIds())
-                .totalAmount(request.getAmount())
-                .status("PENDING")
-                .bookingTime(LocalDateTime.now())
-                .build();
-
-        return bookingRepository.save(booking);
+    public BookingResponse createBooking(BookingRequest request) {
+        Booking booking = bookingMapper.toEntity(request);
+        Booking savedBooking = bookingRepository.save(booking);
+        return bookingMapper.toResponse(savedBooking);
     }
 }

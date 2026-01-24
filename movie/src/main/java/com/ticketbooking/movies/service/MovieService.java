@@ -1,8 +1,8 @@
 package com.ticketbooking.movies.service;
 
-
 import com.querydsl.core.types.Predicate;
 import com.ticketbooking.movies.dto.MovieRequest;
+import com.ticketbooking.movies.dto.MovieResponse;
 import com.ticketbooking.movies.entity.Movie;
 import com.ticketbooking.movies.exception.ResourceNotFoundException;
 import com.ticketbooking.movies.mapper.MovieMapper;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -24,28 +23,25 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
 
-    public Movie saveMovie(MovieRequest movieRequest) {
+    public MovieResponse saveMovie(MovieRequest movieRequest) {
         log.info("Saving new movie : {}", movieRequest.getTitle());
-
-        // 1. Convert DTO to Entity
         Movie movieEntity = movieMapper.toEntity(movieRequest);
-
-        // 2. Save and capture the RESULT (this has the generated ID from MySQL)
         Movie savedMovie = movieRepository.save(movieEntity);
-
-        // 3. Return the saved object so the Controller can show the ID to the user
-        return savedMovie;
+        return movieMapper.toResponse(savedMovie);
     }
 
-    public List<Movie>getAllMovie(){
+    public List<MovieResponse> getAllMovie() {
         log.info("Fetching all movies from the database");
-        return movieRepository.findAll();
+        return movieRepository.findAll().stream()
+                .map(movieMapper::toResponse)
+                .toList();
     }
 
-    public Movie getMovieById(Long id) {
+    public MovieResponse getMovieById(Long id) {
         log.info("Searching for movie with ID: {}", id);
-        return movieRepository.findById(id)
+        Movie movie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movie", "id", id));
+        return movieMapper.toResponse(movie);
     }
 
     public void deleteMovie(Long id) {
@@ -55,15 +51,17 @@ public class MovieService {
         log.warn("Deleting movie with ID: {}", id);
         movieRepository.deleteById(id);
     }
+
     @Transactional
-    public Movie updateMovieById(Long id, MovieRequest movieRequest){
+    public MovieResponse updateMovieById(Long id, MovieRequest movieRequest) {
         Movie existingMovie = movieRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Movie", "id", id));
 
         Movie updatedMovie = movieMapper.toEntity(movieRequest);
         updatedMovie.setId(existingMovie.getId()); // ✅ Preserve the ID!
 
-        return movieRepository.save(updatedMovie); // Need save() here
+        Movie savedMovie = movieRepository.save(updatedMovie);
+        return movieMapper.toResponse(savedMovie);
     }
 
     public List<Long> findAllIdsByCriteria(Predicate predicate) {

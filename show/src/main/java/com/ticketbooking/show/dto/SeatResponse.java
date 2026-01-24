@@ -1,6 +1,5 @@
 package com.ticketbooking.show.dto;
 
-import com.ticketbooking.show.dto.SeatType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

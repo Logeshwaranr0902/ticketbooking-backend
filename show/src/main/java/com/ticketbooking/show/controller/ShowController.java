@@ -1,8 +1,9 @@
 package com.ticketbooking.show.controller;
 
 import com.ticketbooking.show.dto.ShowRequest;
-import com.ticketbooking.show.entity.Show;
+import com.ticketbooking.show.dto.ShowResponse;
 import com.ticketbooking.show.service.ShowService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,14 +19,14 @@ public class ShowController {
     private final ShowService showService;
 
     @PostMapping
-    public ResponseEntity<Show> createShow(@RequestBody ShowRequest request) {
+    public ResponseEntity<ShowResponse> createShow(@Valid @RequestBody ShowRequest request) {
 
-        Show createdShow = showService.createShow(request);
+        ShowResponse createdShow = showService.createShow(request);
         return new ResponseEntity<>(createdShow, HttpStatus.CREATED);
     }
 
     @GetMapping("/movie/{movieId}")
-    public ResponseEntity<List<Show>> getShowsByMovie(@PathVariable Long movieId) {
+    public ResponseEntity<List<ShowResponse>> getShowsByMovie(@PathVariable Long movieId) {
         return ResponseEntity.ok(showService.getShowsByMovieId(movieId));
     }
 }

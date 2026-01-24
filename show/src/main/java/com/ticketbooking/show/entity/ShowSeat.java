@@ -1,7 +1,6 @@
 package com.ticketbooking.show.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.ticketbooking.show.entity.Show;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

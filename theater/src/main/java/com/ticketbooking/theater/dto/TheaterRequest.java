@@ -1,9 +1,9 @@
 package com.ticketbooking.theater.dto;
 
-import com.ticketbooking.theater.dto.ScreenRequest;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
-import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 
@@ -12,7 +12,14 @@ public class TheaterRequest {
 
     @NotBlank(message = "Name is required")
     private String name;
+
+    @NotBlank(message = "City is required")
     private String city;
+
+    @NotBlank(message = "Address is required")
     private String address;
+
+    @NotEmpty(message = "At least one screen is required")
+    @Valid // Cascade validation to nested ScreenRequest objects
     private List<ScreenRequest> screens;
 }
