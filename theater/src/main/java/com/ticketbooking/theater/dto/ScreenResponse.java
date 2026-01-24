@@ -1,14 +1,17 @@
 package com.ticketbooking.theater.dto;
 
-import com.ticketbooking.theater.dto.SeatResponse;
 import com.ticketbooking.theater.entity.ScreenType;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ScreenResponse {
     private Long id;
     private String name;

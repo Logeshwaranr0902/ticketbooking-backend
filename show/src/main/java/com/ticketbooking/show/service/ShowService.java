@@ -2,9 +2,11 @@ package com.ticketbooking.show.service;
 
 import com.ticketbooking.show.dto.SeatResponse;
 import com.ticketbooking.show.dto.ShowRequest;
+import com.ticketbooking.show.dto.ShowResponse;
 import com.ticketbooking.show.entity.Show;
 import com.ticketbooking.show.entity.ShowSeat;
 import com.ticketbooking.show.feignClient.TheaterClient;
+import com.ticketbooking.show.mapper.ShowMapper;
 import com.ticketbooking.show.repository.ShowRepository;
 import com.ticketbooking.show.repository.ShowSeatRepository;
 import com.ticketbooking.show.repository.ShowStatus;
@@ -12,7 +14,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,25 +23,17 @@ public class ShowService {
     private final ShowRepository showRepository;
     private final ShowSeatRepository showSeatRepository;
     private final TheaterClient theaterClient;
+    private final ShowMapper showMapper;
 
     @Transactional // Ensures either everything is saved or nothing is (if an error occurs)
-    public Show createShow(ShowRequest request) {
+    public ShowResponse createShow(ShowRequest request) {
         // 1. Create and save the Show record
-        Show show = Show.builder()
-                .movieId(request.getMovieId())
-                .screenId(request.getScreenId())
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
-                .basePrice(request.getBasePrice())
-                .showStatus(ShowStatus.UPCOMING)
-                .build();
+        Show show = showMapper.toEntity(request);
+        show.setShowStatus(ShowStatus.UPCOMING);
 
         Show savedShow = showRepository.save(show);
 
-
-
-
-        List<SeatResponse>seats = theaterClient.getSeatsByScreenId(request.getScreenId());
+        List<SeatResponse> seats = theaterClient.getSeatsByScreenId(request.getScreenId());
 
         List<ShowSeat> showSeats = seats.stream().map(seat -> {
             // Logic to convert row number (e.g., 2) to Letter (e.g., 'B')
@@ -55,10 +48,13 @@ public class ShowService {
                     .build();
         }).toList();
         showSeatRepository.saveAll(showSeats);
-        return savedShow;
+
+        return showMapper.toResponse(savedShow);
     }
 
-    public List<Show>getShowsByMovieId(Long movieId){
-        return showRepository.findByMovieId(movieId);
+    public List<ShowResponse> getShowsByMovieId(Long movieId) {
+        return showRepository.findByMovieId(movieId).stream()
+                .map(showMapper::toResponse)
+                .toList();
     }
 }

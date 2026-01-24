@@ -1,6 +1,5 @@
 package com.ticketbooking.theater.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -29,9 +28,7 @@ public class Theater {
     @Column(nullable = false)
     private String address;
 
-    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Screen>screens;
-
-
+    @OneToMany(mappedBy = "theater", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Screen> screens;
 
 }

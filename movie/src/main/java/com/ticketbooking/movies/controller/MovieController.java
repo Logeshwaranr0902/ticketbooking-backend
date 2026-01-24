@@ -2,6 +2,7 @@ package com.ticketbooking.movies.controller;
 
 import com.querydsl.core.types.Predicate;
 import com.ticketbooking.movies.dto.MovieRequest;
+import com.ticketbooking.movies.dto.MovieResponse;
 import com.ticketbooking.movies.entity.Movie;
 import com.ticketbooking.movies.service.MovieService;
 import jakarta.validation.Valid;
@@ -22,37 +23,33 @@ public class MovieController {
 
     private final MovieService movieService;
 
-
     @PostMapping
-    public ResponseEntity<Movie> createMovie(@Valid @RequestBody MovieRequest movieRequest) {
-        Movie savedMovie = movieService.saveMovie(movieRequest);
+    public ResponseEntity<MovieResponse> createMovie(@Valid @RequestBody MovieRequest movieRequest) {
+        MovieResponse savedMovie = movieService.saveMovie(movieRequest);
         return new ResponseEntity<>(savedMovie, HttpStatus.CREATED);
     }
 
-
     @GetMapping
-    public ResponseEntity<List<Movie>> getAllMovies() {
-        List<Movie> movies = movieService.getAllMovie();
-        return new ResponseEntity<>(movies,HttpStatus.OK);
+    public ResponseEntity<List<MovieResponse>> getAllMovies() {
+        List<MovieResponse> movies = movieService.getAllMovie();
+        return new ResponseEntity<>(movies, HttpStatus.OK);
     }
 
-
     @GetMapping("/{id}")
-    public ResponseEntity<Movie> getMovieById(@PathVariable Long id) {
-        Movie movie = movieService.getMovieById(id);
+    public ResponseEntity<MovieResponse> getMovieById(@PathVariable Long id) {
+        MovieResponse movie = movieService.getMovieById(id);
         return ResponseEntity.ok(movie);
     }
 
     @GetMapping("/search")
-    public ResponseEntity<Map<String,List<Long>>> getMovieIds(
+    public ResponseEntity<Map<String, List<Long>>> getMovieIds(
             @QuerydslPredicate(root = Movie.class) Predicate predicate) {
 
         List<Long> ids = movieService.findAllIdsByCriteria(predicate);
-        Map<String,List<Long>>idss = new HashMap<>();
-        idss.put("id",ids);
+        Map<String, List<Long>> idss = new HashMap<>();
+        idss.put("id", ids);
         return ResponseEntity.ok(idss);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteMovie(@PathVariable Long id) {
@@ -61,8 +58,9 @@ public class MovieController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Movie> updateMovieById(@PathVariable Long id,@Valid @RequestBody MovieRequest movieRequest){
-        Movie movie = movieService.updateMovieById(id,movieRequest);
-        return new ResponseEntity<>(movie,HttpStatus.OK);
+    public ResponseEntity<MovieResponse> updateMovieById(@PathVariable Long id,
+            @Valid @RequestBody MovieRequest movieRequest) {
+        MovieResponse movie = movieService.updateMovieById(id, movieRequest);
+        return new ResponseEntity<>(movie, HttpStatus.OK);
     }
 }

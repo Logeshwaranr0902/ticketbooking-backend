@@ -1,8 +1,9 @@
 package com.ticketbooking.booking.controller;
 
 import com.ticketbooking.booking.dto.BookingRequest;
-import com.ticketbooking.booking.entity.Booking;
+import com.ticketbooking.booking.dto.BookingResponse;
 import com.ticketbooking.booking.service.BookingService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +18,7 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<Booking> create(@RequestBody BookingRequest request) {
+    public ResponseEntity<BookingResponse> create(@Valid @RequestBody BookingRequest request) {
         return ResponseEntity.ok(bookingService.createBooking(request));
     }
 }

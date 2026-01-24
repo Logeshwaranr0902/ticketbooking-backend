@@ -1,7 +1,9 @@
 package com.ticketbooking.movies.service;
 
+import com.ticketbooking.movies.dto.MovieResponse;
 import com.ticketbooking.movies.entity.Movie;
 import com.ticketbooking.movies.exception.ResourceNotFoundException;
+import com.ticketbooking.movies.mapper.MovieMapper;
 import com.ticketbooking.movies.repository.MovieRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,15 +24,25 @@ public class MovieServiceTest {
     @Mock
     private MovieRepository movieRepository; // The "Stunt Double" (Fake Repo)
 
+    @Mock
+    private MovieMapper movieMapper;
+
     @InjectMocks
     private MovieService movieService; // The "Real Actor" (Injects fake repo here)
 
     private Movie mockMovie;
+    private MovieResponse mockResponse;
 
     @BeforeEach
     void setUp() {
         // Prepare dummy data before every test
         mockMovie = Movie.builder()
+                .id(1L)
+                .title("The Dark Knight")
+                .genre(com.ticketbooking.movies.entity.Genre.ACTION)
+                .build();
+
+        mockResponse = MovieResponse.builder()
                 .id(1L)
                 .title("The Dark Knight")
                 .genre(com.ticketbooking.movies.entity.Genre.ACTION)
@@ -42,9 +54,10 @@ public class MovieServiceTest {
     void getMovieById_Success() {
         // 1. Arrange: Tell the fake repo what to return when called
         when(movieRepository.findById(1L)).thenReturn(Optional.of(mockMovie));
+        when(movieMapper.toResponse(mockMovie)).thenReturn(mockResponse);
 
         // 2. Act: Call the real service method
-        Movie result = movieService.getMovieById(1L);
+        com.ticketbooking.movies.dto.MovieResponse result = movieService.getMovieById(1L);
 
         // 3. Assert: Check if the result is what we expected
         assertNotNull(result);

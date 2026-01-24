@@ -1,6 +1,5 @@
 package com.ticketbooking.theater.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -30,7 +29,6 @@ public class Screen {
     @JoinColumn(name = "theater_id")
     private Theater theater;
 
-    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "screen", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Seat> seats;
 }
-
