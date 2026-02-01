@@ -16,9 +16,10 @@ public class Seat {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long seatNumber;
+    @Column(name = "seat_position")
+    private String seatPosition;
 
-    @Column(name="seat_row")
+    @Column(name = "seat_row")
     private Integer rowNumber;
 
     @Enumerated(EnumType.STRING)
@@ -27,7 +28,5 @@ public class Seat {
     @ManyToOne
     @JoinColumn(name = "screen_id")
     private Screen screen;
-
-
 
 }

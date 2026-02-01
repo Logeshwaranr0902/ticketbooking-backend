@@ -16,5 +16,6 @@ public interface BookingMapper {
     @Mapping(target = "totalAmount", source = "amount")
     Booking toEntity(BookingRequest request);
 
+    @Mapping(target = "seats", ignore = true)
     BookingResponse toResponse(Booking booking);
 }

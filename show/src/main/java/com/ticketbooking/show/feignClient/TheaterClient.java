@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "theater-service") // Remove the path from here
+@FeignClient(name = "theater-service")
 public interface TheaterClient {
 
     // Move the full path here where Feign can actually resolve the variable
-    @GetMapping("/api/v1/theaters/{screenId}/seats/count")
+    @GetMapping("/api/v1/theaters/{screenId}/seats")
     List<SeatResponse> getSeatsByScreenId(@PathVariable("screenId") Long screenId);
 }

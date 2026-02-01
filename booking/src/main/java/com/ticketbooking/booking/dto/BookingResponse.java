@@ -16,7 +16,7 @@ public class BookingResponse {
     private Long id;
     private Long userId;
     private Long showId;
-    private List<Long> showSeatIds;
+    private List<SeatResponse> seats;
     private Double totalAmount;
     private LocalDateTime bookingTime;
     private String status;

@@ -1,6 +1,7 @@
 package com.ticketbooking.show.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.ticketbooking.show.dto.SeatType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,9 +19,13 @@ public class ShowSeat {
     private Long id;
 
     private Long seatId;
-    private String seatNumber;
+    @Column(name = "seat_position")
+    private String seatPosition;
 
     private boolean isBooked;
+
+    @Enumerated(EnumType.STRING)
+    private SeatType seatType;
 
     @ManyToOne
     @JoinColumn(name = "show_id")

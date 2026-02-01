@@ -1,5 +1,6 @@
 package com.ticketbooking.theater.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ticketbooking.theater.entity.ScreenType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,5 +17,6 @@ public class ScreenResponse {
     private Long id;
     private String name;
     private ScreenType screenType;
+    @JsonIgnore
     private List<SeatResponse> seats;
 }

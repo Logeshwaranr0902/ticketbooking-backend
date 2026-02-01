@@ -1,6 +1,5 @@
-package com.ticketbooking.theater.dto;
+package com.ticketbooking.booking.dto;
 
-import com.ticketbooking.theater.entity.SeatType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,11 +7,10 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 public class SeatResponse {
     private Long id;
     private String seatPosition;
-    private Integer rowNumber;
     private SeatType seatType;
 }
