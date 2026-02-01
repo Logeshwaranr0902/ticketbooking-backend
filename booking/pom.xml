@@ -41,7 +41,11 @@
             <artifactId>querydsl-jpa</artifactId>
             <classifier>jakarta</classifier>
         </dependency>
-
+        <!-- Inter Communication -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
 
         <!-- Service Discovery -->
         <dependency>

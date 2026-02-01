@@ -11,22 +11,25 @@ spring:
         - id: booking-service
           uri: lb://BOOKING-SERVICE
           predicates:
-            - Path=/bookings/**
+            - Path=/api/v1/bookings/**
         - id: theater-service
           uri: lb://THEATER-SERVICE
           predicates:
-            - Path=/theaters/**
+            - Path=/api/v1/theaters/**
         - id: movie-service
           uri: lb://MOVIE-SERVICE
           predicates:
-            - Path=/movies/**
+            - Path=/api/v1/movies/**
         - id: show-service
           uri: lb://SHOW-SERVICE
           predicates:
-            - Path=/shows/**
+            - Path=/api/v1/shows/**
 
 
 eureka:
   client:
     service-url:
       defaultZone: http://localhost:8761/eureka
+  instance:
+    hostname: localhost
+    prefer-ip-address: false

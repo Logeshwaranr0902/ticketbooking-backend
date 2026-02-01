@@ -10,4 +10,5 @@ import java.util.List;
 public interface ShowRepository extends JpaRepository<Show,Long> {
 
     public List<Show>findByMovieId(Long movieId);
+
 }

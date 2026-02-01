@@ -5,16 +5,21 @@ import com.ticketbooking.show.dto.ShowRequest;
 import com.ticketbooking.show.dto.ShowResponse;
 import com.ticketbooking.show.entity.Show;
 import com.ticketbooking.show.entity.ShowSeat;
+import com.ticketbooking.show.exception.ResourceNotFoundException;
+
 import com.ticketbooking.show.feignClient.TheaterClient;
 import com.ticketbooking.show.mapper.ShowMapper;
 import com.ticketbooking.show.repository.ShowRepository;
 import com.ticketbooking.show.repository.ShowSeatRepository;
 import com.ticketbooking.show.repository.ShowStatus;
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,15 +41,12 @@ public class ShowService {
         List<SeatResponse> seats = theaterClient.getSeatsByScreenId(request.getScreenId());
 
         List<ShowSeat> showSeats = seats.stream().map(seat -> {
-            // Logic to convert row number (e.g., 2) to Letter (e.g., 'B')
-            char rowLetter = (char) ('A' + seat.getRowNumber() - 1);
-            String formattedSeatNumber = rowLetter + String.valueOf(seat.getSeatNumber()); // Result: "B3"
-
             return ShowSeat.builder()
                     .seatId(seat.getId())
-                    .seatNumber(formattedSeatNumber)
+                    .seatPosition(seat.getSeatPosition())
                     .isBooked(false)
                     .show(savedShow)
+                    .seatType(seat.getSeatType())
                     .build();
         }).toList();
         showSeatRepository.saveAll(showSeats);
@@ -56,5 +58,40 @@ public class ShowService {
         return showRepository.findByMovieId(movieId).stream()
                 .map(showMapper::toResponse)
                 .toList();
+    }
+
+    public void deleteShow(Long showId) {
+        if (!showRepository.existsById(showId)) {
+            throw new ResourceNotFoundException("Show not found");
+        }
+        showRepository.deleteById(showId);
+    }
+
+    public ShowResponse getShowById(Long showId) {
+        Optional<Show> shows = showRepository.findById(showId);
+        return shows.stream().map((showMapper::toResponse)).findAny()
+                .orElseThrow(() -> new ResourceNotFoundException("No show found with id: " + showId));
+
+    }
+
+    public List<SeatResponse> getSeatById(Long showId) {
+        if (!showRepository.existsById(showId)) {
+            throw new ResourceNotFoundException("Show not found with id: " + showId);
+        }
+        return showSeatRepository.findByShowId(showId).stream().map(showMapper::toResponse).toList();
+    }
+
+    public List<SeatResponse> bookSeats(List<Long> seatIds) {
+        List<ShowSeat>seats = showSeatRepository.findAllById(seatIds);
+        seats.forEach(seat ->seat.setBooked(true));
+        showSeatRepository.saveAll(seats);
+        return seats.stream().map(showMapper::toResponse).toList();
+    }
+
+    public List<SeatResponse> cancelSeat(List<Long> seatIds) {
+        List<ShowSeat>seats = showSeatRepository.findAllById(seatIds);
+        seats.forEach(seat ->seat.setBooked(false));
+        showSeatRepository.saveAll(seats);
+        return seats.stream().map(showMapper::toResponse).toList();
     }
 }

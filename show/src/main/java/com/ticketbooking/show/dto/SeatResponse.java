@@ -9,7 +9,7 @@ import lombok.Data;
 @AllArgsConstructor
 public class SeatResponse {
     private Long id;
-    private Long seatNumber;
-    private Integer rowNumber;
+    private String seatPosition;
+
     private SeatType seatType;
 }

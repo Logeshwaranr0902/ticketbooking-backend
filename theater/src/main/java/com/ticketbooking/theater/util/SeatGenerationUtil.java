@@ -32,10 +32,13 @@ public final class SeatGenerationUtil {
         for (int row = 1; row <= rows; row++) {
             SeatType seatType = determineSeatType(row, segmentSize);
 
-            for (int seatNum = 1; seatNum <= seatsPerRow; seatNum++) {
+            for (int col = 1; col <= seatsPerRow; col++) {
+                String rowLabel = getRowLabel(row);
+                String seatPosition = String.format("%s%d", rowLabel, col);
+
                 Seat seat = Seat.builder()
                         .rowNumber(row)
-                        .seatNumber((long) seatNum)
+                        .seatPosition(seatPosition)
                         .seatType(seatType)
                         .screen(screen)
                         .build();
@@ -44,6 +47,21 @@ public final class SeatGenerationUtil {
         }
 
         return seats;
+    }
+
+    /**
+     * Converts a row number (1-based) to an Excel-style column label.
+     * 1 -> A, 26 -> Z, 27 -> AA, 28 -> AB, etc.
+     */
+    private static String getRowLabel(int rowNumber) {
+        StringBuilder label = new StringBuilder();
+        while (rowNumber > 0) {
+            rowNumber--; // Adjust to 0-based for modulo
+            char currentChar = (char) ('A' + (rowNumber % 26));
+            label.insert(0, currentChar);
+            rowNumber /= 26;
+        }
+        return label.toString();
     }
 
     /**
