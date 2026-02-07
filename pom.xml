@@ -6,7 +6,6 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <!-- ===== Spring Boot BOM ===== -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -14,7 +13,6 @@
         <relativePath/>
     </parent>
 
-    <!-- ===== Project Coordinates ===== -->
     <groupId>com.ticketbooking</groupId>
     <artifactId>ticketbooking-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -23,9 +21,8 @@
     <name>Ticket Booking - Parent</name>
     <description>Parent POM for the Ticket Booking microservices system</description>
 
-    <!-- ===== Modules ===== -->
     <modules>
-        <module>eurekaServer</module>
+        <module>eureka-server</module>
         <module>gateway</module>
         <module>movie</module>
         <module>theater</module>
@@ -33,41 +30,25 @@
         <module>booking</module>
     </modules>
 
-    <!-- ===== Centralized Version Properties ===== -->
     <properties>
-        <!-- Build Settings -->
         <java.version>21</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
-        <!-- Spring Cloud -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
-
-        <!-- Database -->
         <mysql-connector.version>9.3.0</mysql-connector.version>
-
-        <!-- Code Generation -->
         <querydsl.version>5.0.0</querydsl.version>
         <apt-maven-plugin.version>1.1.3</apt-maven-plugin.version>
-
-        <!-- Utilities -->
         <lombok.version>1.18.34</lombok.version>
-
-        <!-- MapStruct -->
         <mapstruct.version>1.5.5.Final</mapstruct.version>
         <lombok-mapstruct-binding.version>0.2.0</lombok-mapstruct-binding.version>
     </properties>
 
-    <!-- ===== Common Dependencies (Inherited by All Modules) ===== -->
     <dependencies>
-        <!-- Lombok - Available to all modules -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
-
-        <!-- Testing - Available to all modules -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -75,10 +56,8 @@
         </dependency>
     </dependencies>
 
-    <!-- ===== Dependency Version Management ===== -->
     <dependencyManagement>
         <dependencies>
-            <!-- Spring Cloud BOM -->
             <dependency>
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
@@ -86,23 +65,17 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-
-            <!-- MySQL Connector -->
             <dependency>
                 <groupId>com.mysql</groupId>
                 <artifactId>mysql-connector-j</artifactId>
                 <version>${mysql-connector.version}</version>
             </dependency>
-
-            <!-- Lombok -->
             <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
                 <scope>provided</scope>
             </dependency>
-
-            <!-- QueryDSL -->
             <dependency>
                 <groupId>com.querydsl</groupId>
                 <artifactId>querydsl-jpa</artifactId>
@@ -116,8 +89,6 @@
                 <classifier>jakarta</classifier>
                 <scope>provided</scope>
             </dependency>
-
-            <!-- MapStruct -->
             <dependency>
                 <groupId>org.mapstruct</groupId>
                 <artifactId>mapstruct</artifactId>
@@ -132,11 +103,9 @@
         </dependencies>
     </dependencyManagement>
 
-    <!-- ===== Plugin Management (Centralized Plugin Versions) ===== -->
     <build>
         <pluginManagement>
             <plugins>
-                <!-- Spring Boot Maven Plugin -->
                 <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
@@ -150,25 +119,21 @@
                     </configuration>
                 </plugin>
 
-                <!-- Maven Compiler Plugin with ALL Annotation Processors -->
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <configuration>
                         <annotationProcessorPaths>
-                            <!-- Lombok MUST be first -->
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok</artifactId>
                                 <version>${lombok.version}</version>
                             </path>
-                            <!-- Binding between Lombok and MapStruct -->
                             <path>
                                 <groupId>org.projectlombok</groupId>
                                 <artifactId>lombok-mapstruct-binding</artifactId>
                                 <version>${lombok-mapstruct-binding.version}</version>
                             </path>
-                            <!-- QueryDSL APT processor -->
                             <path>
                                 <groupId>com.querydsl</groupId>
                                 <artifactId>querydsl-apt</artifactId>
@@ -180,18 +145,15 @@
                                 <artifactId>jakarta.persistence-api</artifactId>
                                 <version>3.1.0</version>
                             </path>
-                            <!-- MapStruct MUST be last -->
                             <path>
                                 <groupId>org.mapstruct</groupId>
                                 <artifactId>mapstruct-processor</artifactId>
                                 <version>${mapstruct.version}</version>
                             </path>
                         </annotationProcessorPaths>
-
                     </configuration>
                 </plugin>
 
-                <!-- QueryDSL APT Plugin -->
                 <plugin>
                     <groupId>com.mysema.maven</groupId>
                     <artifactId>apt-maven-plugin</artifactId>
@@ -211,5 +173,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>

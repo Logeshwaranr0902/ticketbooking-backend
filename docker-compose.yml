@@ -3,13 +3,12 @@ version: '3.8'
 services:
   movie-db:
     container_name: movie-db-container
-    command: --default-authentication-plugin=mysql_native_password
     image: 'mysql:8.0'
     environment:
       MYSQL_DATABASE: movie_db
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - '3307:3306' # For Workbench access
+      - '3307:3306'
     networks:
       - ticket-booking-net
     volumes:
@@ -17,13 +16,12 @@ services:
 
   theater-db:
     container_name: theater-db-container
-    command: --default-authentication-plugin=mysql_native_password
     image: 'mysql:8.0'
     environment:
       MYSQL_DATABASE: theater_db
       MYSQL_ROOT_PASSWORD: root
     ports:
-      - '3308:3306' # For Workbench access
+      - '3308:3306'
     networks:
       - ticket-booking-net
     volumes:
@@ -31,7 +29,6 @@ services:
 
   show-db:
     container_name: show-db-container
-    command: --default-authentication-plugin=mysql_native_password
     image: 'mysql:8.0'
     environment:
       MYSQL_DATABASE: show_db
@@ -56,6 +53,112 @@ services:
     volumes:
       - booking-data:/var/lib/mysql
 
+  keycloak:
+    container_name: keycloak-container
+    image: quay.io/keycloak/keycloak:24.0
+    command: start-dev
+    environment:
+      KC_DB: dev-file
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+    ports:
+      - '8180:8080'
+    networks:
+      - ticket-booking-net
+    volumes:
+      - keycloak-data:/opt/keycloak/data
+
+  eureka-server:
+    container_name: eureka-server-container
+    build:
+      context: ./eureka-server
+      dockerfile: Dockerfile
+    image: ticketbooking/eureka-server:latest
+    ports:
+      - '8761:8761'
+    networks:
+      - ticket-booking-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+
+  gateway:
+    container_name: gateway-container
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    image: ticketbooking/gateway:latest
+    ports:
+      - '8080:8080'
+    networks:
+      - ticket-booking-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-server
+
+  movie-service:
+    container_name: movie-service-container
+    build:
+      context: ./movie
+      dockerfile: Dockerfile
+    image: ticketbooking/movie:latest
+    ports:
+      - '8081:8081'
+    networks:
+      - ticket-booking-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-server
+      - movie-db
+
+  theater-service:
+    container_name: theater-service-container
+    build:
+      context: ./theater
+      dockerfile: Dockerfile
+    image: ticketbooking/theater:latest
+    ports:
+      - '8082:8082'
+    networks:
+      - ticket-booking-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-server
+      - theater-db
+
+  show-service:
+    container_name: show-service-container
+    build:
+      context: ./show
+      dockerfile: Dockerfile
+    image: ticketbooking/show:latest
+    ports:
+      - '8083:8083'
+    networks:
+      - ticket-booking-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-server
+      - show-db
+
+  booking-service:
+    container_name: booking-service-container
+    build:
+      context: ./booking
+      dockerfile: Dockerfile
+    image: ticketbooking/booking:latest
+    ports:
+      - '8084:8084'
+    networks:
+      - ticket-booking-net
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-server
+      - booking-db
 
 networks:
   ticket-booking-net:
@@ -66,3 +169,4 @@ volumes:
   theater-data:
   show-data:
   booking-data:
+  keycloak-data:

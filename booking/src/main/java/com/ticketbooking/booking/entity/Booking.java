@@ -18,9 +18,9 @@ public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    private Long userId;
+    private String userId;
     private Long showId;
 
     @ElementCollection // Stores the list of ShowSeat IDs

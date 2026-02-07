@@ -1,8 +1,28 @@
 package com.ticketbooking.gateway;
 
-
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 
 @Configuration
+@EnableWebFluxSecurity
 public class SecurityConfig {
+
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+        http
+                .csrf(ServerHttpSecurity.CsrfSpec::disable)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) // Disable Basic Auth
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable) // Disable Form Login
+                .authorizeExchange(exchanges -> exchanges
+                        .pathMatchers("/api/v1/movies/**").permitAll() // Public endpoints
+                        .pathMatchers("/api/v1/shows/**").permitAll()
+                        .anyExchange().authenticated())
+                .oauth2ResourceServer(oauth2 -> oauth2
+                        .jwt(jwt -> {
+                        }));
+        return http.build();
+    }
 }

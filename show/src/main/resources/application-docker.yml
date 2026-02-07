@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: show-service
+  datasource:
+    url: jdbc:mysql://show-db:3306/show_db
+    username: root
+    password: root
+
+server:
+  port: 8083
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

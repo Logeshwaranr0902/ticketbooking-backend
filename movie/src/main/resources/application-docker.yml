@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: movie-service
+  datasource:
+    url: jdbc:mysql://movie-db:3306/movie_db
+    username: root
+    password: root
+
+server:
+  port: 8081
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

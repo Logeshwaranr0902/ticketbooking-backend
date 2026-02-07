@@ -1,0 +1,15 @@
+spring:
+  application:
+    name: theater-service
+  datasource:
+    url: jdbc:mysql://theater-db:3306/theater_db
+    username: root
+    password: root
+
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka/

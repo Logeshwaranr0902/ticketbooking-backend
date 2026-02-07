@@ -13,7 +13,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>eurekaServer</artifactId>
+    <artifactId>eureka-server</artifactId>
     <name>Ticket Booking - Eureka Server</name>
     <description>Netflix Eureka Service Discovery Server</description>
 

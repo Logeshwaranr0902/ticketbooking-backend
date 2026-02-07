@@ -18,6 +18,12 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:8180/realms/ticketbooking
 logging:
   level:
     org.hibernate.SQL: DEBUG
@@ -26,7 +32,7 @@ logging:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://localhost:8761/eureka/
   instance:
     hostname: localhost
     prefer-ip-address: false

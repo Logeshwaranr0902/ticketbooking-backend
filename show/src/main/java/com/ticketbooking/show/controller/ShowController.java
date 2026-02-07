@@ -59,4 +59,9 @@ public class ShowController {
     public ResponseEntity<List<SeatResponse>> cancelSeats(@RequestBody List<Long> seatIds) {
         return ResponseEntity.status(HttpStatus.OK).body(showService.cancelSeat(seatIds));
     }
+
+    @PostMapping("/seats/by-ids")
+    public ResponseEntity<List<SeatResponse>> getSeatsById(@RequestBody List<Long> seatIds) {
+        return ResponseEntity.ok(showService.getSeatsByIds(seatIds));
+    }
 }

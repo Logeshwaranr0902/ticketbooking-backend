@@ -21,27 +21,47 @@ public class BookingService {
     private final BookingMapper bookingMapper;
     private final ShowClient showClient;
 
-    public BookingResponse createBooking(BookingRequest request) {
+    public BookingResponse createBooking(BookingRequest request, String userId) {
         List<SeatResponse> seatResponseList = showClient.bookSeats(request.getSeatIds());
         Booking booking = bookingMapper.toEntity(request);
+        booking.setUserId(userId); // Set userId from JWT token
         Booking savedBooking = bookingRepository.save(booking);
         BookingResponse bookingResponse = bookingMapper.toResponse(savedBooking);
         bookingResponse.setSeats(seatResponseList);
         return bookingResponse;
     }
 
-    public List<SeatResponse> cancelBooking(Long bookingId) {
+    public List<SeatResponse> cancelBooking(Long bookingId, String userId) {
         Optional<Booking> bookingOptional = bookingRepository.findById(bookingId);
         if (bookingOptional.isPresent()) {
             Booking booking = bookingOptional.get();
+
+            // Security check: Only allow cancelling own bookings
+            if (!booking.getUserId().equals(userId)) {
+                throw new RuntimeException("You can only cancel your own bookings");
+            }
+
             List<Long> seatIds = booking.getShowSeatIds();
-           List<SeatResponse>seatResponse = showClient.cancelSeats(seatIds);
+            List<SeatResponse> seatResponse = showClient.cancelSeats(seatIds);
             bookingRepository.deleteById(bookingId);
             return seatResponse;
         } else {
             throw new RuntimeException("Booking not found");
         }
 
+    }
+
+    public List<BookingResponse> getMyBookings(String userId) {
+        List<Booking> bookings = bookingRepository.findByUserId(userId);
+        return bookings.stream()
+                .map(booking -> {
+                    BookingResponse response = bookingMapper.toResponse(booking);
+                    // Fetch seat details from ShowClient
+                    List<SeatResponse> seats = showClient.getSeatsById(booking.getShowSeatIds());
+                    response.setSeats(seats);
+                    return response;
+                })
+                .toList();
     }
 
 }

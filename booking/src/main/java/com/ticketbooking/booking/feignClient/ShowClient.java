@@ -2,6 +2,7 @@ package com.ticketbooking.booking.feignClient;
 
 import com.ticketbooking.booking.dto.SeatResponse;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -15,4 +16,7 @@ public interface ShowClient {
 
     @PutMapping("/api/v1/shows/seats/cancel")
     List<SeatResponse> cancelSeats(@RequestBody List<Long> seatIds);
+
+    @PostMapping("/api/v1/shows/seats/by-ids")
+    List<SeatResponse> getSeatsById(@RequestBody List<Long> seatIds);
 }

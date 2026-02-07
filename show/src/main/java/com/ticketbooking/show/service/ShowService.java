@@ -82,16 +82,21 @@ public class ShowService {
     }
 
     public List<SeatResponse> bookSeats(List<Long> seatIds) {
-        List<ShowSeat>seats = showSeatRepository.findAllById(seatIds);
-        seats.forEach(seat ->seat.setBooked(true));
+        List<ShowSeat> seats = showSeatRepository.findAllById(seatIds);
+        seats.forEach(seat -> seat.setBooked(true));
         showSeatRepository.saveAll(seats);
         return seats.stream().map(showMapper::toResponse).toList();
     }
 
     public List<SeatResponse> cancelSeat(List<Long> seatIds) {
-        List<ShowSeat>seats = showSeatRepository.findAllById(seatIds);
-        seats.forEach(seat ->seat.setBooked(false));
+        List<ShowSeat> seats = showSeatRepository.findAllById(seatIds);
+        seats.forEach(seat -> seat.setBooked(false));
         showSeatRepository.saveAll(seats);
+        return seats.stream().map(showMapper::toResponse).toList();
+    }
+
+    public List<SeatResponse> getSeatsByIds(List<Long> seatIds) {
+        List<ShowSeat> seats = showSeatRepository.findAllById(seatIds);
         return seats.stream().map(showMapper::toResponse).toList();
     }
 }

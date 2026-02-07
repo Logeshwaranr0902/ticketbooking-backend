@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BookingResponse {
     private Long id;
-    private Long userId;
+    private String userId;
     private Long showId;
     private List<SeatResponse> seats;
     private Double totalAmount;
