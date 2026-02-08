@@ -1,0 +1,40 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: movie-service
+          uri: ${MOVIE_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/movies/**
+          filters:
+            - TokenRelay
+        - id: theater-service
+          uri: ${THEATER_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/theaters/**
+          filters:
+            - TokenRelay
+        - id: show-service
+          uri: ${SHOW_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/shows/**
+          filters:
+            - TokenRelay
+        - id: booking-service
+          uri: ${BOOKING_SERVICE_URL}
+          predicates:
+            - Path=/api/v1/bookings/**
+          filters:
+            - TokenRelay
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI}
+
+eureka:
+  client:
+    enabled: false
