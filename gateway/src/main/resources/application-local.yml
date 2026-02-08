@@ -1,0 +1,49 @@
+server:
+  port: ${GATEWAY_PORT:8080}
+
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: movie-service
+          uri: lb://MOVIE-SERVICE
+          predicates:
+            - Path=/api/v1/movies/**
+          filters:
+            - TokenRelay
+        - id: theater-service
+          uri: lb://THEATER-SERVICE
+          predicates:
+            - Path=/api/v1/theaters/**
+          filters:
+            - TokenRelay
+        - id: show-service
+          uri: lb://SHOW-SERVICE
+          predicates:
+            - Path=/api/v1/shows/**
+          filters:
+            - TokenRelay
+        - id: booking-service
+          uri: lb://BOOKING-SERVICE
+          predicates:
+            - Path=/api/v1/bookings/**
+          filters:
+            - TokenRelay
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${JWT_ISSUER_URI:http://localhost:8180/realms/ticketbooking}
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka/}
+  instance:
+    hostname: localhost
+    preferIpAddress: false
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    org.springframework.web: DEBUG

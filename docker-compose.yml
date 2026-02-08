@@ -3,10 +3,10 @@ version: '3.8'
 services:
   movie-db:
     container_name: movie-db-container
-    image: 'mysql:8.0'
+    image: 'mysql:${MYSQL_VERSION}'
     environment:
-      MYSQL_DATABASE: movie_db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${MOVIE_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3307:3306'
     networks:
@@ -16,10 +16,10 @@ services:
 
   theater-db:
     container_name: theater-db-container
-    image: 'mysql:8.0'
+    image: 'mysql:${MYSQL_VERSION}'
     environment:
-      MYSQL_DATABASE: theater_db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${THEATER_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3308:3306'
     networks:
@@ -29,10 +29,10 @@ services:
 
   show-db:
     container_name: show-db-container
-    image: 'mysql:8.0'
+    image: 'mysql:${MYSQL_VERSION}'
     environment:
-      MYSQL_DATABASE: show_db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${SHOW_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3309:3306'
     networks:
@@ -42,10 +42,10 @@ services:
 
   booking-db:
     container_name: booking-db-container
-    image: 'mysql:8.0'
+    image: 'mysql:${MYSQL_VERSION}'
     environment:
-      MYSQL_DATABASE: booking_db
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: ${BOOKING_DB_NAME}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
     ports:
       - '3310:3306'
     networks:
@@ -58,107 +58,15 @@ services:
     image: quay.io/keycloak/keycloak:24.0
     command: start-dev
     environment:
-      KC_DB: dev-file
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_DB: ${KEYCLOAK_DB}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
-      - '8180:8080'
+      - '${KEYCLOAK_PORT}:8080'
     networks:
       - ticket-booking-net
     volumes:
       - keycloak-data:/opt/keycloak/data
-
-  eureka-server:
-    container_name: eureka-server-container
-    build:
-      context: ./eureka-server
-      dockerfile: Dockerfile
-    image: ticketbooking/eureka-server:latest
-    ports:
-      - '8761:8761'
-    networks:
-      - ticket-booking-net
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-
-  gateway:
-    container_name: gateway-container
-    build:
-      context: ./gateway
-      dockerfile: Dockerfile
-    image: ticketbooking/gateway:latest
-    ports:
-      - '8080:8080'
-    networks:
-      - ticket-booking-net
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-server
-
-  movie-service:
-    container_name: movie-service-container
-    build:
-      context: ./movie
-      dockerfile: Dockerfile
-    image: ticketbooking/movie:latest
-    ports:
-      - '8081:8081'
-    networks:
-      - ticket-booking-net
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-server
-      - movie-db
-
-  theater-service:
-    container_name: theater-service-container
-    build:
-      context: ./theater
-      dockerfile: Dockerfile
-    image: ticketbooking/theater:latest
-    ports:
-      - '8082:8082'
-    networks:
-      - ticket-booking-net
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-server
-      - theater-db
-
-  show-service:
-    container_name: show-service-container
-    build:
-      context: ./show
-      dockerfile: Dockerfile
-    image: ticketbooking/show:latest
-    ports:
-      - '8083:8083'
-    networks:
-      - ticket-booking-net
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-server
-      - show-db
-
-  booking-service:
-    container_name: booking-service-container
-    build:
-      context: ./booking
-      dockerfile: Dockerfile
-    image: ticketbooking/booking:latest
-    ports:
-      - '8084:8084'
-    networks:
-      - ticket-booking-net
-    environment:
-      - SPRING_PROFILES_ACTIVE=docker
-    depends_on:
-      - eureka-server
-      - booking-db
 
 networks:
   ticket-booking-net:
