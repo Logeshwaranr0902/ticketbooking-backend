@@ -1,1 +1,17 @@
 .idea/
+target/
+*.log
+*.class
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+*.iml
+.vscode/
