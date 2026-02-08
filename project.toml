@@ -1,0 +1,3 @@
+[[build.env]]
+name = "GOOGLE_BUILD_COMMAND"
+value = "mvn clean package -DskipTests -q"
