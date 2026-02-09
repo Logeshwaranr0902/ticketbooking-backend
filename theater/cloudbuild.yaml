@@ -8,7 +8,7 @@ steps:
       - '--source=.'
       - '--region=${_DEPLOY_REGION}'
       - '--allow-unauthenticated'
-      - '--set-build-env-vars=BP_JVM_VERSION=21,BP_MAVEN_BUILT_MODULE=theater'
+      - '--set-build-env-vars=BP_JVM_VERSION=21,BP_MAVEN_BUILT_MODULE=theater,BP_MAVEN_BUILD_ARGUMENTS=-pl theater -am package -DskipTests'
 
 substitutions:
   _DEPLOY_REGION: asia-south1
