@@ -1,14 +1,11 @@
 steps:
-  - name: 'maven:3.9-eclipse-temurin-21'
-    entrypoint: mvn
-    args: ['compile', 'jib:build', '-Djib.to.image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/ticketbooking/gateway', '-pl', 'gateway', '-am', '-DskipTests']
-    dir: '..'
-    id: Build
-
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
-    args: ['run', 'deploy', 'gateway', '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/ticketbooking/gateway', '--region=${_REGION}', '--allow-unauthenticated']
-    id: Deploy
-
-substitutions:
-  _REGION: asia-south1
+    args:
+      - 'run'
+      - 'deploy'
+      - 'gateway'
+      - '--source=.'
+      - '--region=asia-south1'
+      - '--allow-unauthenticated'
+      - '--set-build-env-vars=BP_JVM_VERSION=21,BP_MAVEN_BUILT_MODULE=gateway'
