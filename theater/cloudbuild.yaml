@@ -1,0 +1,14 @@
+steps:
+  - name: 'maven:3.9-eclipse-temurin-21'
+    entrypoint: mvn
+    args: ['compile', 'jib:build', '-Djib.to.image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/ticketbooking/theater', '-pl', 'theater', '-am', '-DskipTests']
+    dir: '..'
+    id: Build
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: gcloud
+    args: ['run', 'deploy', 'theater', '--image=${_REGION}-docker.pkg.dev/${PROJECT_ID}/ticketbooking/theater', '--region=${_REGION}', '--allow-unauthenticated']
+    id: Deploy
+
+substitutions:
+  _REGION: asia-south1
