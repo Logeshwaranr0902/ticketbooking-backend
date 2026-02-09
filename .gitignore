@@ -1,2 +1,66 @@
+# ===================
+# Build Outputs
+# ===================
+**/target/
+
+# ===================
+# IDE - IntelliJ IDEA
+# ===================
 .idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ===================
+# IDE - VS Code
+# ===================
+.vscode/
+*.code-workspace
+
+# ===================
+# IDE - Eclipse
+# ===================
+.classpath
+.project
+.settings/
+bin/
+
+# ===================
+# Environment Files
+# ===================
 .env
+*.env.local
+*.env.*.local
+
+# ===================
+# Logs
+# ===================
+*.log
+logs/
+
+# ===================
+# OS Files
+# ===================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ===================
+# Maven
+# ===================
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+# ===================
+# Docker
+# ===================
+.docker/
+
+# ===================
+# Misc
+# ===================
+*.swp
+*.swo
+*~
