@@ -170,6 +170,18 @@
                         </execution>
                     </executions>
                 </plugin>
+
+                <!-- Jib for building Docker images -->
+                <plugin>
+                    <groupId>com.google.cloud.tools</groupId>
+                    <artifactId>jib-maven-plugin</artifactId>
+                    <version>3.4.4</version>
+                    <configuration>
+                        <from>
+                            <image>eclipse-temurin:21-jre</image>
+                        </from>
+                    </configuration>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
