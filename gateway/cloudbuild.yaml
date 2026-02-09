@@ -6,6 +6,12 @@ steps:
       - 'deploy'
       - 'gateway'
       - '--source=.'
-      - '--region=asia-south1'
+      - '--region=${_DEPLOY_REGION}'
       - '--allow-unauthenticated'
       - '--set-build-env-vars=BP_JVM_VERSION=21,BP_MAVEN_BUILT_MODULE=gateway'
+
+substitutions:
+  _DEPLOY_REGION: asia-south1
+
+options:
+  logging: CLOUD_LOGGING_ONLY
