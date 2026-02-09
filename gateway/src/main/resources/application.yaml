@@ -1,8 +1,5 @@
 spring:
   application:
     name: gateway
-
-logging:
-  level:
-    org.springframework.security: DEBUG
-    org.springframework.web: DEBUG
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:local}
