@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
-@FeignClient(name = "theater-service")
+@FeignClient(name = "theater-service", url = "${THEATER_SERVICE_URL:}")
 public interface TheaterClient {
 
     // Move the full path here where Feign can actually resolve the variable

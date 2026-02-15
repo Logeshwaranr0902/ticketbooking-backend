@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "show-service")
+@FeignClient(name = "show-service", url = "${SHOW_SERVICE_URL:}")
 public interface ShowClient {
 
     @PutMapping("/api/v1/shows/seats/book")
