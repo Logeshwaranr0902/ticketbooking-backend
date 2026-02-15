@@ -1,6 +1,117 @@
 version: '3.8'
 
 services:
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "${EUREKA_PORT}:8761"
+    environment:
+      - PORT=8761
+    networks:
+      - ticket-booking-net
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8761/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  gateway:
+    build: ./gateway
+    container_name: gateway-container
+    ports:
+      - "${GATEWAY_PORT}:8080"
+    environment:
+      - PORT=8080
+      - MOVIE_SERVICE_URL=http://movie-service:8080
+      - THEATER_SERVICE_URL=http://theater-service:8080
+      - SHOW_SERVICE_URL=http://show-service:8080
+      - BOOKING_SERVICE_URL=http://booking-service:8080
+      - JWT_ISSUER_URI=http://keycloak:8080/realms/ticket-booking-realm
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_CLIENT_ENABLED=true
+    depends_on:
+      eureka-server:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks:
+      - ticket-booking-net
+
+  movie:
+    build: ./movie
+    container_name: movie-service
+    ports:
+      - "${MOVIE_SERVICE_PORT}:8080"
+    environment:
+      - PORT=8080
+      - DB_URL=jdbc:mysql://movie-db:3306/${MOVIE_DB_NAME}
+      - DB_USERNAME=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_CLIENT_ENABLED=true
+    depends_on:
+      - movie-db
+      - eureka-server
+    networks:
+      - ticket-booking-net
+
+  theater:
+    build: ./theater
+    container_name: theater-service
+    ports:
+      - "${THEATER_SERVICE_PORT}:8080"
+    environment:
+      - PORT=8080
+      - DB_URL=jdbc:mysql://theater-db:3306/${THEATER_DB_NAME}
+      - DB_USERNAME=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_CLIENT_ENABLED=true
+    depends_on:
+      - theater-db
+      - eureka-server
+    networks:
+      - ticket-booking-net
+
+  show:
+    build: ./show
+    container_name: show-service
+    ports:
+      - "${SHOW_SERVICE_PORT}:8080"
+    environment:
+      - PORT=8080
+      - DB_URL=jdbc:mysql://show-db:3306/${SHOW_DB_NAME}
+      - DB_USERNAME=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_CLIENT_ENABLED=true
+    depends_on:
+      - show-db
+      - eureka-server
+    networks:
+      - ticket-booking-net
+
+  booking:
+    build: ./booking
+    container_name: booking-service
+    ports:
+      - "${BOOKING_SERVICE_PORT}:8080"
+    environment:
+      - PORT=8080
+      - DB_URL=jdbc:mysql://booking-db:3306/${BOOKING_DB_NAME}
+      - DB_USERNAME=${MYSQL_USER}
+      - DB_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - JWT_ISSUER_URI=http://keycloak:8080/realms/ticket-booking-realm
+      - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
+      - EUREKA_CLIENT_ENABLED=true
+    depends_on:
+      - booking-db
+      - keycloak
+      - eureka-server
+    networks:
+      - ticket-booking-net
+
   movie-db:
     container_name: movie-db-container
     image: 'mysql:${MYSQL_VERSION}'
@@ -13,6 +124,11 @@ services:
       - ticket-booking-net
     volumes:
       - movie-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   theater-db:
     container_name: theater-db-container
@@ -26,6 +142,11 @@ services:
       - ticket-booking-net
     volumes:
       - theater-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   show-db:
     container_name: show-db-container
@@ -39,6 +160,11 @@ services:
       - ticket-booking-net
     volumes:
       - show-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   booking-db:
     container_name: booking-db-container
@@ -52,6 +178,11 @@ services:
       - ticket-booking-net
     volumes:
       - booking-data:/var/lib/mysql
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   keycloak:
     container_name: keycloak-container
