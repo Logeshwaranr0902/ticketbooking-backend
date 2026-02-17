@@ -4,6 +4,9 @@ server:
 spring:
   cloud:
     gateway:
+      httpclient:
+        connect-timeout: 10000
+        response-timeout: 60s
       routes:
         - id: movie-service
           uri: ${MOVIE_SERVICE_URL}
@@ -35,6 +38,10 @@ spring:
         jwt:
           issuer-uri: ${JWT_ISSUER_URI}
 
-eureka:
-  client:
-    enabled: false
+
+logging:
+  level:
+    org.springframework.cloud.gateway: TRACE
+    org.springframework.http.server.reactive: DEBUG
+    org.springframework.web.reactive: DEBUG
+    reactor.netty: DEBUG
