@@ -8,11 +8,13 @@ import com.ticketbooking.booking.feignClient.ShowClient;
 import com.ticketbooking.booking.mapper.BookingMapper;
 import com.ticketbooking.booking.repository.BookingRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BookingService {
@@ -22,12 +24,23 @@ public class BookingService {
     private final ShowClient showClient;
 
     public BookingResponse createBooking(BookingRequest request, String userId) {
+        log.info(">>> createBooking START - userId: {}, seatIds: {}", userId, request.getSeatIds());
+
+        log.info(">>> Calling showClient.bookSeats...");
         List<SeatResponse> seatResponseList = showClient.bookSeats(request.getSeatIds());
+        log.info(">>> showClient.bookSeats DONE - got {} seats", seatResponseList.size());
+
         Booking booking = bookingMapper.toEntity(request);
-        booking.setUserId(userId); // Set userId from JWT token
+        booking.setUserId(userId);
+
+        log.info(">>> Saving booking to DB...");
         Booking savedBooking = bookingRepository.save(booking);
+        log.info(">>> Booking saved - id: {}", savedBooking.getId());
+
         BookingResponse bookingResponse = bookingMapper.toResponse(savedBooking);
         bookingResponse.setSeats(seatResponseList);
+
+        log.info(">>> createBooking END");
         return bookingResponse;
     }
 
@@ -52,16 +65,24 @@ public class BookingService {
     }
 
     public List<BookingResponse> getMyBookings(String userId) {
+        log.info(">>> getMyBookings START - userId: {}", userId);
+
         List<Booking> bookings = bookingRepository.findByUserId(userId);
-        return bookings.stream()
+        log.info(">>> Found {} bookings in DB", bookings.size());
+
+        List<BookingResponse> result = bookings.stream()
                 .map(booking -> {
                     BookingResponse response = bookingMapper.toResponse(booking);
-                    // Fetch seat details from ShowClient
+                    log.info(">>> Calling showClient.getSeatsById for booking {} with seatIds: {}", booking.getId(), booking.getShowSeatIds());
                     List<SeatResponse> seats = showClient.getSeatsById(booking.getShowSeatIds());
+                    log.info(">>> showClient.getSeatsById DONE for booking {}", booking.getId());
                     response.setSeats(seats);
                     return response;
                 })
                 .toList();
+
+        log.info(">>> getMyBookings END");
+        return result;
     }
 
 }
