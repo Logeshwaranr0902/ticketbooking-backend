@@ -23,10 +23,11 @@ public class Seat {
     private Integer rowNumber;
 
     @Enumerated(EnumType.STRING)
-    private SeatType seatType; // REGULAR, PREMIUM, RECLINER
+    private SeatType seatType; 
 
     @ManyToOne
     @JoinColumn(name = "screen_id")
     private Screen screen;
 
 }
+

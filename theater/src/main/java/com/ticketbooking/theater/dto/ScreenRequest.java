@@ -14,7 +14,7 @@ public class ScreenRequest {
     private String name;
 
     @NotNull(message = "Screen type is required")
-    private ScreenType screenType; // 2D, 3D, IMAX
+    private ScreenType screenType; 
 
     @Min(value = 1, message = "Rows must be at least 1")
     @Max(value = 50, message = "Rows cannot exceed 50")

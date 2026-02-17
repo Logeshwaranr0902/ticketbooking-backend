@@ -20,6 +20,6 @@ public class TheaterRequest {
     private String address;
 
     @NotEmpty(message = "At least one screen is required")
-    @Valid // Cascade validation to nested ScreenRequest objects
+    @Valid 
     private List<ScreenRequest> screens;
 }

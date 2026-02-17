@@ -6,7 +6,7 @@ import java.util.List;
 
 @Data
 public class BookingRequest {
-    // userId is NOT here - it comes from JWT token for security!
+    
 
     @NotNull(message = "Show ID is required")
     private Long showId;

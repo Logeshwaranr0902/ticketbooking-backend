@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface BookingMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "status", constant = "PENDING") // Default status
+    @Mapping(target = "status", constant = "PENDING") 
     @Mapping(target = "bookingTime", expression = "java(java.time.LocalDateTime.now())")
     @Mapping(target = "showSeatIds", source = "seatIds")
     @Mapping(target = "totalAmount", source = "amount")
@@ -19,3 +19,4 @@ public interface BookingMapper {
     @Mapping(target = "seats", ignore = true)
     BookingResponse toResponse(Booking booking);
 }
+

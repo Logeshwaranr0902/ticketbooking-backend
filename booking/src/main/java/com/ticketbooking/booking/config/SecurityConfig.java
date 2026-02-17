@@ -6,10 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
-/**
- * Security configuration for Booking Service.
- * Permits all requests (Gateway handles auth) but parses JWT for user info.
- */
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -19,12 +16,13 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .anyRequest().authenticated() // Don't require auth, Gateway handles it
+                        .anyRequest().authenticated() 
                 )
                 .oauth2ResourceServer(oauth2 -> oauth2
                         .jwt(jwt -> {
-                        }) // But still parse JWT if present
+                        }) 
                 );
         return http.build();
     }
 }
+

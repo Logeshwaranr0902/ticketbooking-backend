@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 public interface MovieMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "rating", ignore = true) // Rating is initially null or 0
+    @Mapping(target = "rating", ignore = true) 
     Movie toEntity(MovieRequest request);
 
     MovieResponse toResponse(Movie movie);

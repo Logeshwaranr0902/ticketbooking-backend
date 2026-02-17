@@ -30,9 +30,9 @@ public class ShowService {
     private final TheaterClient theaterClient;
     private final ShowMapper showMapper;
 
-    @Transactional // Ensures either everything is saved or nothing is (if an error occurs)
+    @Transactional 
     public ShowResponse createShow(ShowRequest request) {
-        // 1. Create and save the Show record
+        
         Show show = showMapper.toEntity(request);
         show.setShowStatus(ShowStatus.UPCOMING);
 

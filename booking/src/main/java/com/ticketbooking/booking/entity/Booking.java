@@ -23,11 +23,12 @@ public class Booking {
     private String userId;
     private Long showId;
 
-    @ElementCollection // Stores the list of ShowSeat IDs
+    @ElementCollection 
     private List<Long> showSeatIds;
 
     private Double totalAmount;
     private LocalDateTime bookingTime;
-    private String status; // PENDING, CONFIRMED, CANCELLED
+    private String status; 
 
 }
+

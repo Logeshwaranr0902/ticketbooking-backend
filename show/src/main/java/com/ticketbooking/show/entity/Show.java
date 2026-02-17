@@ -22,8 +22,8 @@ public class Show {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long movieId;   // From Movie Service
-    private Long screenId;  // From Theater Service (Theater ID can be found via Screen)
+    private Long movieId;   
+    private Long screenId;  
 
     private LocalDateTime startTime;
     private LocalDateTime endTime;
@@ -36,3 +36,4 @@ public class Show {
     @OneToMany(mappedBy = "show", cascade = CascadeType.ALL)
     private List<ShowSeat> showSeats;
 }
+

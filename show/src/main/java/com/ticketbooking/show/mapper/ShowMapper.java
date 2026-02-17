@@ -12,7 +12,7 @@ import org.mapstruct.Mapping;
 public interface ShowMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "showStatus", ignore = true) // Set in service
+    @Mapping(target = "showStatus", ignore = true) 
     @Mapping(target = "showSeats", ignore = true)
     Show toEntity(ShowRequest request);
 
@@ -20,3 +20,4 @@ public interface ShowMapper {
 
     ShowResponse toResponse(Show show);
 }
+

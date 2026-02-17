@@ -58,20 +58,21 @@ public class MovieService {
                 .orElseThrow(() -> new ResourceNotFoundException("Movie", "id", id));
 
         Movie updatedMovie = movieMapper.toEntity(movieRequest);
-        updatedMovie.setId(existingMovie.getId()); // ✅ Preserve the ID!
+        updatedMovie.setId(existingMovie.getId()); 
 
         Movie savedMovie = movieRepository.save(updatedMovie);
         return movieMapper.toResponse(savedMovie);
     }
 
     public List<Long> findAllIdsByCriteria(Predicate predicate) {
-        // 1. Fetch all matching movies
+        
         Iterable<Movie> movies = movieRepository.findAll(predicate);
 
-        // 2. Convert the Iterable of Movies into a List of IDs
+        
         List<Long> ids = new ArrayList<>();
         movies.forEach(movie -> ids.add(movie.getId()));
 
         return ids;
     }
 }
+

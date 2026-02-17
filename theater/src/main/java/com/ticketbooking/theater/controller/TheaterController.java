@@ -23,7 +23,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/v1/theaters")
 @RequiredArgsConstructor
-@Validated // Enable validation on method parameters
+@Validated 
 public class TheaterController {
 
     private final TheaterService theaterService;
@@ -74,3 +74,4 @@ public class TheaterController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }
+

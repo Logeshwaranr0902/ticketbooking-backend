@@ -10,7 +10,7 @@ import java.util.List;
 @FeignClient(name = "theater-service", url = "${THEATER_SERVICE_URL:}")
 public interface TheaterClient {
 
-    // Move the full path here where Feign can actually resolve the variable
+    
     @GetMapping("/api/v1/theaters/{screenId}/seats")
     List<SeatResponse> getSeatsByScreenId(@PathVariable("screenId") Long screenId);
 }

@@ -49,7 +49,7 @@ public class BookingService {
         if (bookingOptional.isPresent()) {
             Booking booking = bookingOptional.get();
 
-            // Security check: Only allow cancelling own bookings
+            
             if (!booking.getUserId().equals(userId)) {
                 throw new RuntimeException("You can only cancel your own bookings");
             }

@@ -14,10 +14,10 @@ public class SecurityConfig {
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
         http
                 .csrf(ServerHttpSecurity.CsrfSpec::disable)
-                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) // Disable Basic Auth
-                .formLogin(ServerHttpSecurity.FormLoginSpec::disable) // Disable Form Login
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable) 
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable) 
                 .authorizeExchange(exchanges -> exchanges
-                        .pathMatchers("/api/v1/movies/**").permitAll() // Public endpoints
+                        .pathMatchers("/api/v1/movies/**").permitAll() 
                         .pathMatchers("/api/v1/shows/**").permitAll()
                         .anyExchange().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2
@@ -26,3 +26,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
