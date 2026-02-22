@@ -31,4 +31,7 @@ public class ShowSeat {
     @JoinColumn(name = "show_id")
     @JsonIgnore
     private Show show;
+
+    @Version
+    private Long version;
 }

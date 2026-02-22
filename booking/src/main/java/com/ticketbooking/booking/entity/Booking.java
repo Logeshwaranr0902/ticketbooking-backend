@@ -23,12 +23,12 @@ public class Booking {
     private String userId;
     private Long showId;
 
-    @ElementCollection 
+    @ElementCollection
     private List<Long> showSeatIds;
 
     private Double totalAmount;
     private LocalDateTime bookingTime;
-    private String status; 
 
+    @Enumerated(EnumType.STRING)
+    private BookingStatus status;
 }
-

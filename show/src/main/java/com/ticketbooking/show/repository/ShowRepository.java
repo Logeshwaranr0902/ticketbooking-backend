@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface ShowRepository extends JpaRepository<Show,Long> {
 
-    public List<Show>findByMovieId(Long movieId);
+    List<Show>findByMovieId(Long movieId);
 
 }

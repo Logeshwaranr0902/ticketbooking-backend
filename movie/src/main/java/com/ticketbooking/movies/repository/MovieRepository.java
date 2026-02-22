@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface MovieRepository extends JpaRepository<Movie, Long> , QuerydslPredicateExecutor<Movie> {
 
-    public Movie findByTitle(String name);
+    Movie findByTitle(String name);
 }

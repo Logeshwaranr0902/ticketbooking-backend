@@ -21,7 +21,6 @@ public class ShowController {
 
     @PostMapping
     public ResponseEntity<ShowResponse> createShow(@Valid @RequestBody ShowRequest request) {
-
         ShowResponse createdShow = showService.createShow(request);
         return new ResponseEntity<>(createdShow, HttpStatus.CREATED);
     }
@@ -32,32 +31,30 @@ public class ShowController {
     }
 
     @DeleteMapping("/{showId}")
-    public ResponseEntity<String> deleteShow(@PathVariable Long showId) {
+    public ResponseEntity<Void> deleteShow(@PathVariable Long showId) {
         showService.deleteShow(showId);
-        return new ResponseEntity<>("Deleted", HttpStatus.OK);
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/getshows/{showId}")
+    @GetMapping("/{showId}")
     public ResponseEntity<ShowResponse> getShow(@PathVariable Long showId) {
         ShowResponse showResponse = showService.getShowById(showId);
-        return new ResponseEntity<>(showResponse, HttpStatus.OK);
+        return ResponseEntity.ok(showResponse);
     }
 
-    @GetMapping("/getseats/{showId}")
+    @GetMapping("/{showId}/seats")
     public ResponseEntity<List<SeatResponse>> getSeatsByShow(@PathVariable Long showId) {
-        List<SeatResponse> seats = showService.getSeatById(showId);
-        return ResponseEntity.status(HttpStatus.OK).body(seats);
-
+        return ResponseEntity.ok(showService.getSeatById(showId));
     }
 
     @PutMapping("/seats/book")
     public ResponseEntity<List<SeatResponse>> bookSeats(@RequestBody List<Long> seatIds) {
-        return ResponseEntity.status(HttpStatus.OK).body(showService.bookSeats(seatIds));
+        return ResponseEntity.ok(showService.bookSeats(seatIds));
     }
 
     @PutMapping("/seats/cancel")
     public ResponseEntity<List<SeatResponse>> cancelSeats(@RequestBody List<Long> seatIds) {
-        return ResponseEntity.status(HttpStatus.OK).body(showService.cancelSeat(seatIds));
+        return ResponseEntity.ok(showService.cancelSeat(seatIds));
     }
 
     @PostMapping("/seats/by-ids")
