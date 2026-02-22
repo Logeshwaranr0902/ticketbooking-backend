@@ -12,4 +12,8 @@ public class SeatResponse {
     private String seatPosition;
 
     private SeatType seatType;
+
+    public SeatResponse() {
+
+    }
 }
